@@ -14,6 +14,8 @@
  */
 package com.amazonaws.services.kinesis.clientlibrary.proxies;
 
+import com.amazonaws.ClientConfiguration;
+
 /** 
  * Interface for a KinesisProxyFactory.
  *
@@ -23,8 +25,9 @@ public interface IKinesisProxyFactory {
     /**
      * Return an IKinesisProxy object for the specified stream.
      * @param streamName Stream from which data is consumed.
+     * @param clientConfig Client Configuration used when instantiating an AmazonKinesisClient
      * @return IKinesisProxy object.
      */
-    IKinesisProxy getProxy(String streamName);
+    IKinesisProxy getProxy(String streamName, ClientConfiguration clientConfig);
 
 }

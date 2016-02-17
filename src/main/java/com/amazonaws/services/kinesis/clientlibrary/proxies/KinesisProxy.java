@@ -24,6 +24,7 @@ import java.util.concurrent.atomic.AtomicReference;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
+import com.amazonaws.ClientConfiguration;
 import com.amazonaws.auth.AWSCredentialsProvider;
 import com.amazonaws.services.kinesis.AmazonKinesis;
 import com.amazonaws.services.kinesis.AmazonKinesisClient;
@@ -68,11 +69,12 @@ public class KinesisProxy implements IKinesisProxyExtended {
      * 
      * @param streamName Data records will be fetched from this stream
      * @param credentialProvider Provides credentials for signing Kinesis requests
+     * @param clientConfig Client Configuration used when instantiating an AmazonKinesisClient
      * @param endpoint Kinesis endpoint
      */
 
-    public KinesisProxy(final String streamName, AWSCredentialsProvider credentialProvider, String endpoint) {
-        this(streamName, credentialProvider, endpoint, defaultServiceName, defaultRegionId,
+    public KinesisProxy(final String streamName, AWSCredentialsProvider credentialProvider, ClientConfiguration clientConfig, String endpoint) {
+        this(streamName, credentialProvider, clientConfig, endpoint, defaultServiceName, defaultRegionId,
                 DEFAULT_DESCRIBE_STREAM_BACKOFF_MILLIS, DEFAULT_DESCRIBE_STREAM_RETRY_TIMES);
     }
 
@@ -81,6 +83,7 @@ public class KinesisProxy implements IKinesisProxyExtended {
      * 
      * @param streamName Data records will be fetched from this stream
      * @param credentialProvider Provides credentials for signing Kinesis requests
+     * @param clientConfig Client Configuration used when instantiating an AmazonKinesisClient
      * @param endpoint Kinesis endpoint
      * @param serviceName service name
      * @param regionId region id
@@ -89,12 +92,14 @@ public class KinesisProxy implements IKinesisProxyExtended {
      */
     public KinesisProxy(final String streamName,
             AWSCredentialsProvider credentialProvider,
+            ClientConfiguration clientConfig,
             String endpoint,
             String serviceName,
             String regionId,
             long describeStreamBackoffTimeInMillis,
             int maxDescribeStreamRetryAttempts) {
         this(streamName, credentialProvider, buildClientSettingEndpoint(credentialProvider,
+                clientConfig,
                 endpoint,
                 serviceName,
                 regionId), describeStreamBackoffTimeInMillis, maxDescribeStreamRetryAttempts);
@@ -104,10 +109,11 @@ public class KinesisProxy implements IKinesisProxyExtended {
     }
     
     private static AmazonKinesisClient buildClientSettingEndpoint(AWSCredentialsProvider credentialProvider,
+            ClientConfiguration clientConfig,
             String endpoint,
             String serviceName,
             String regionId) {
-        AmazonKinesisClient client = new AmazonKinesisClient(credentialProvider);
+        AmazonKinesisClient client = new AmazonKinesisClient(credentialProvider, clientConfig);
         client.setEndpoint(endpoint, serviceName, regionId);
         return client;
     }

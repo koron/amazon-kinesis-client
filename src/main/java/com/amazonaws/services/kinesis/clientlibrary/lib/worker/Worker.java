@@ -209,7 +209,7 @@ public class Worker implements Runnable {
                 new V1ToV2RecordProcessorFactoryAdapter(recordProcessorFactory),
                 new StreamConfig(
                         new KinesisProxyFactory(config.getKinesisCredentialsProvider(), kinesisClient)
-                            .getProxy(config.getStreamName()),
+                            .getProxy(config.getStreamName(), config.getKinesisClientConfiguration()),
                         config.getMaxRecords(), config.getIdleTimeBetweenReadsInMillis(),
                         config.shouldCallProcessRecordsEvenForEmptyRecordList(),
                         config.shouldValidateSequenceNumberBeforeCheckpointing()),
@@ -814,7 +814,7 @@ public class Worker implements Runnable {
             return new Worker(config.getApplicationName(),
                     recordProcessorFactory,
                     new StreamConfig(new KinesisProxyFactory(config.getKinesisCredentialsProvider(),
-                            kinesisClient).getProxy(config.getStreamName()),
+                            kinesisClient).getProxy(config.getStreamName(), config.getKinesisClientConfiguration()),
                             config.getMaxRecords(),
                             config.getIdleTimeBetweenReadsInMillis(),
                             config.shouldCallProcessRecordsEvenForEmptyRecordList(),

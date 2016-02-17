@@ -118,9 +118,10 @@ public class KinesisProxyFactory implements IKinesisProxyFactory {
      * {@inheritDoc}
      */
     @Override
-    public IKinesisProxy getProxy(String streamName) {
+    public IKinesisProxy getProxy(String streamName, ClientConfiguration clientConfig) {
         return new KinesisProxy(streamName,
                 credentialProvider,
+                clientConfig,
                 kinesisClient,
                 describeStreamBackoffTimeInMillis,
                 maxDescribeStreamRetryAttempts);
